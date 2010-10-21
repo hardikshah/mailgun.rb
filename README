@@ -1,4 +1,28 @@
 Mailgun API wrapper for Ruby
 
 Documentation:
-http://documentation.mailgun.net/API%20Reference
+=============
+Please visit our documentation page at 
+http://documentation.mailgun.net
+
+
+Installation
+============
+
+* Make sure you have ActiveResource gem installed
+* Download mailgun.rb file
+
+Getting started:
+================
+
+require 'mailgun.rb'
+
+Mailgun::init("my-api-key", "https://mailgun.net/api")
+Mailbox.find(:all).each do |mbox|
+    puts mbox.id
+end
+
+For more visit http://documentation.mailgun.net
+
+--
+MG team
