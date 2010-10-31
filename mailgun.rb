@@ -49,10 +49,22 @@ class Mailgun
     end
   end
 
+  module RequestBuilder
+    def prepare_request(url_string)
+      uri  = URI.parse(url_string)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true if uri.port == 443
+      return [http, (uri.path + '?' + uri.query)]
+    end
+  end
 end
 
 
+
+
 class MailgunMessage
+  extend Mailgun::RequestBuilder
+
   # Sends a MIME-formatted message
   #
   #  raw_mime =
@@ -65,10 +77,9 @@ class MailgunMessage
   #
   def self.send_raw(sender, recipients, raw_body, servername='')
     uri_str = "#{MailgunResource.site}messages.eml?api_key=#{MailgunResource.password}&servername=#{servername}"
-    uri = URI.parse(uri_str)
+    http, url = prepare_request(uri_str)
     data = "#{sender}\n#{recipients}\n\n#{raw_body}"
-    http = Net::HTTP.new(uri.host, uri.port)
-    res = http.post(uri.path + "?" + uri.query, data, {"Content-type" => "text/plain" })
+    res = http.post(url, data, {"Content-type" => "text/plain" })
     Mailgun::handle_response(res)
   end
 
@@ -81,22 +92,23 @@ class MailgunMessage
   #
   def self.send_text(sender, recipients, subject, text, servername='')
     uri_str = "#{MailgunResource.site}messages.txt?api_key=#{MailgunResource.password}&servername=#{servername}"
-    uri = URI.parse(uri_str)
     params = { :sender => sender, :recipients => recipients, :subject => subject, :body => text}
-    req = Net::HTTP::Post.new(uri.path + "?" + uri.query)
+    http, url = prepare_request(uri_str)
+    req = Net::HTTP::Post.new(url)
     req.set_form_data(params)
-    http = Net::HTTP.new(uri.host, uri.port)
     res = http.request(req)
     Mailgun::handle_response(res)
   end
-
 end
+
+
 
 # Base class for Mailgun resource classes
 # It adds upsert() method on top of ActiveResource::Base
 #
 class MailgunResource < ActiveResource::Base
   self.user = "api_key"
+  extend Mailgun::RequestBuilder
 
   # Create new resource or update it if resource already exist.
   # There are 2 differences between upsert() and save():
@@ -134,9 +146,8 @@ class Mailbox < MailgunResource
   #
   def self.upsert_from_csv(mailboxes)
     uri_str = "#{MailgunResource.site}mailboxes.txt?api_key=#{MailgunResource.password}"
-    uri = URI.parse(uri_str)
-    http = Net::HTTP.new(uri.host, uri.port)
-    res = http.post(uri.path + "?" + uri.query, mailboxes, {"Content-type" => "text/plain" })
+    http, url = prepare_request(uri_str)
+    res = http.post(url, mailboxes, {"Content-type" => "text/plain" })
     Mailgun::handle_response(res)
   end
 end
