@@ -2,15 +2,23 @@ Mailgun API wrapper for Ruby
 
 Documentation:
 =============
+
 Please visit our documentation page at 
 http://documentation.mailgun.net
 
 
-Installation
+Installation:
 ============
 
 * Make sure you have ActiveResource gem installed
 * Download mailgun.rb file
+
+Samples tryout:
+===============
+
+> ruby samples/sending-messages.rb
+> ruby samples/creating-routes.rb
+> ruby samples/using-mailboxes.rb
 
 Getting started:
 ================

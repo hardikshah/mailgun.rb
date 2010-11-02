@@ -1,16 +1,16 @@
 require 'mailgun'
 
-Mailgun::init("my-api-key")
+Mailgun::init("key-afy6amxoo2fnj$u@mc")
 
 # Sending a simple text message:
-MailgunMessage::send_text("me@myhost",
-                  "you@yourhost, 'Him' <him@hishost>",
+MailgunMessage::send_text("me@samples.mailgun.org",
+                  "you@yourhost, 'Him' <you@mailgun.info>",
                   "Hello",
-                  "Hi!\nI am sending the message using Mailgun")
+                  "Hi!\nI am sending the message using Mailgun Ruby API")
 
 # Sending a MIME message:
-sender   = "me@myhost"
-receiver = "you@yourhost"
+sender   = "me@samples.mailgun.org"
+receiver = "you@mailgun.info"
 raw_mime =
   "Content-Type: text/plain;charset=utf-8\n" +
   "From: #{sender}\n" +
@@ -18,7 +18,7 @@ raw_mime =
   "Content-Type: text/plain;charset=utf-8\n" +
   "Subject: Hello!\n" +
   "\n" +
-  "This is message body"
+  "Sending the message using Mailgun Ruby API"
 MailgunMessage::send_raw(sender, receiver, raw_mime)
 
 puts "Messages sent"

@@ -1,9 +1,9 @@
 require 'mailgun'
 
-Mailgun::init("my-api-key")
+Mailgun::init("key-afy6amxoo2fnj$u@mc")
 
 # creating a route:
-route = Route.new(:pattern => '*@myhost.com', :destination => 'http://myhost.com/post')
+route = Route.new(:pattern => '*@samples.mailgun.org', :destination => 'http://samples.mailgun.org/post')
 route.upsert()
 
 # print out all routes:
