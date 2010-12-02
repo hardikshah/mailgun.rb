@@ -65,6 +65,8 @@ end
 class MailgunMessage
   extend Mailgun::RequestBuilder
 
+  MAILGUN_TAG = 'X-Mailgun-Tag'
+
   # Sends a MIME-formatted message
   #
   #  raw_mime =
@@ -90,9 +92,12 @@ class MailgunMessage
   #      "Subject",
   #      "Hi!\nThis is message body")
   #
-  def self.send_text(sender, recipients, subject, text, servername='')
+  def self.send_text(sender, recipients, subject, text, servername='', options = nil)
     uri_str = "#{MailgunResource.site}messages.txt?api_key=#{MailgunResource.password}&servername=#{servername}"
     params = { :sender => sender, :recipients => recipients, :subject => subject, :body => text}
+    unless options.nil?
+      params['options'] = ActiveSupport::JSON.encode(options)
+    end
     http, url = prepare_request(uri_str)
     req = Net::HTTP::Post.new(url)
     req.set_form_data(params)
