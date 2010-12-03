@@ -20,7 +20,7 @@ MailgunMessage::send_text("me@samples.mailgun.org",
 sender   = "me@samples.mailgun.org"
 receiver = "you@mailgun.info"
 raw_mime =
-  "X-Mailgun-Tag: sample_raw_ruby" +
+  "X-Mailgun-Tag: sample_raw_ruby\n" +
   "Content-Type: text/plain;charset=utf-8\n" +
   "From: #{sender}\n" +
   "To: #{receiver}\n" +
